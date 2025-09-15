@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :clock_in do
       end
+      resources :follow do
+        post :unfollow, on: :collection
+      end
     end
   end
 end

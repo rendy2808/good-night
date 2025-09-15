@@ -17,6 +17,16 @@ module Api
         render json: { errors: error }, status: :unprocessable_entity
       end
 
+      def following_record
+        user_id = params[:user_id]
+
+        result = ::FollowingRecordBuilder.new(user_id).perform
+
+        render json: result, status: :ok
+      rescue => error
+        render json: { errors: error }, status: :unprocessable_entity
+      end
+
       private
 
       def payload

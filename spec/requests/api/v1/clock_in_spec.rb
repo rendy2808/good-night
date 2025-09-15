@@ -137,4 +137,53 @@ RSpec.describe 'Clock In API', type: :request do
       end
     end
   end
+
+  describe 'GET /clock_in/following_record' do
+    let(:subject) do
+      get "/api/v1/clock_in/following_record?user_id=#{user_id}", headers: headers
+    end
+
+    let!(:clock_in1) { create(:clock_in, user_id: users[1].id, clock_in_type: 'good_night') }
+    let!(:clock_in2) { create(:clock_in, user_id: users[1].id, clock_in_type: 'wake_up') }
+    let!(:clock_in3) { create(:clock_in, user_id: users[1].id, clock_in_type: 'good_night') }
+    let!(:clock_in4) { create(:clock_in, user_id: users[1].id, clock_in_type: 'wake_up') }
+    let!(:clock_in5) { create(:clock_in, user_id: users[2].id, clock_in_type: 'good_night') }
+    let!(:clock_in6) { create(:clock_in, user_id: users[2].id, clock_in_type: 'wake_up') }
+    let!(:clock_in7) { create(:clock_in, user_id: users[2].id, clock_in_type: 'good_night') }
+    let!(:clock_in8) { create(:clock_in, user_id: users[2].id, clock_in_type: 'wake_up') }
+
+    before do
+      create(:follow, user_id: user_id, followed_user_id: users[1].id)
+      create(:follow, user_id: user_id, followed_user_id: users[2].id)
+    end
+
+    context 'when successfuly retrieve data' do
+      it 'success' do
+        subject
+
+        expected_response = [
+          { "#{users[1].name}" => clock_in2.created_at - clock_in1.created_at },
+          { "#{users[1].name}" => clock_in4.created_at - clock_in3.created_at },
+          { "#{users[2].name}" => clock_in6.created_at - clock_in5.created_at },
+          { "#{users[2].name}" => clock_in8.created_at - clock_in7.created_at },
+        ].sort_by { |hash| hash.values.first }
+
+        expect(response).to have_http_status(200)
+        expect(JSON.parse(response.body)).to eq expected_response
+      end
+    end
+
+    context 'when user_id not found' do
+      let(:subject) do
+        get "/api/v1/clock_in/following_record?user_id=999", headers: headers
+      end
+
+      it 'response empty array' do
+        subject
+
+        expect(response).to have_http_status(200)
+        expect(JSON.parse(response.body)).to eq []
+      end
+    end
+  end
 end

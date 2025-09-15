@@ -6,7 +6,7 @@ To run this project, ensure you have the following installed:
 
 - **Ruby**: Version specified in `.ruby-version` file
 - **Rails**: Version specified in `Gemfile`
-- **PostgreSQL**: Compatible with the specified Rails version
+- **SQLlite**: Compatible with the specified Rails version
 
 ### Installation
 
@@ -19,7 +19,7 @@ To run this project, ensure you have the following installed:
    ```bash
    bundle install
    ```
-3. Ensure PostgreSQL is running and properly configured.
+3. Since this project using sql lite, should be no need configuration.
 
 ## Database Setup
 

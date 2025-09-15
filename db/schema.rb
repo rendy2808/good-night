@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_15_154310) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_15_154800) do
+  create_table "clock_ins", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "clock_in_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_clock_ins_on_user_id"
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "followed_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followed_user_id"], name: "index_follows_on_followed_user_id"
+    t.index ["user_id"], name: "index_follows_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false

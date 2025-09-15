@@ -6,5 +6,5 @@ class ClockIn < ApplicationRecord
   validates :user_id, presence: true
   validates :clock_in_type, presence: true
 
-  enum clock_in_type: { good_night: 0, wake_up: 1 }
+  enum :clock_in_type, { good_night: 0, wake_up: 1 }
 end
